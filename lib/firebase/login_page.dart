@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   bool isVisible = false;
@@ -51,14 +52,14 @@ class _LoginPageState extends State<LoginPage> {
               setState(() {
                 isVisible = false;
               });
-              Fluttertoast.showToast(msg: "User successfully logged-in");
+              _showSnackBar("User successfully logged-in");
               Get.offNamed(Utils.homeRoute);
             }
             else {
               setState(() {
                 isVisible = false;
               });
-              Fluttertoast.showToast(msg: "Failed to login user");
+              _showSnackBar("Failed to login user");
             }
          }
        },
@@ -116,28 +117,19 @@ class _LoginPageState extends State<LoginPage> {
                   String password = _passController.text.toString();
 
                   if(email.isEmpty){
-                    Get.showSnackbar(const GetSnackBar(
-                      message: "Email should not be empty",
-                      duration: Duration(seconds: 2),
-                    ));
+                    _showSnackBar("Email should not be empty");
                     return;
                   }
                   if(password.isEmpty){
-                    Get.showSnackbar(const GetSnackBar(
-                      message: "Password should not empty",
-                      duration: Duration(seconds: 2),
-                    ));
+                    _showSnackBar("Password should not empty");
                     return;
                   }
                   if(password.length < 6){
-                    Get.showSnackbar(const GetSnackBar(
-                      message: "Password Length cannot be less than 6",
-                      duration: Duration(seconds: 2),
-                    ));
+                    _showSnackBar("Password Length cannot be less than 6");
                     return;
                   }
 
-                  BlocProvider.of<ShopBloc>(context).add(LoginUserEvent(email, password));
+                  context.read<ShopBloc>().add(LoginUserEvent(email, password));
 
                 }, color: Colors.deepOrange, isLoading: isVisible,),
                 Padding(
@@ -162,5 +154,12 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  _showSnackBar(String msg){
+    Get.showSnackbar(GetSnackBar(
+      message: msg,
+      duration: const Duration(seconds: 2),
+    ));
   }
 }

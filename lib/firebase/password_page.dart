@@ -89,7 +89,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     isLoading = true;
                   });
 
-                  BlocProvider.of<ShopBloc>(context).add(RecoverPassEvent(email));
+                  context.read<ShopBloc>().add(RecoverPassEvent(email));
                 }, color: Colors.deepOrange, isLoading: isLoading,),
               ],
             ),

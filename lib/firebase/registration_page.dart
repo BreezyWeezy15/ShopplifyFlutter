@@ -52,7 +52,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
            if(state is RegisterState){
              if(state.userCredential != null){
                _showSnackBar("Success");
-               BlocProvider.of<ShopBloc>(context).add(UploadDataEvent(state.userImage,state.name,state.email,state.phone));
+               context.read<ShopBloc>().add(UploadDataEvent(state.userImage,state.name,state.email,state.phone));
              }
              else {
                _showSnackBar("Failed to create an account");
@@ -141,7 +141,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       return;
                     }
 
-                    BlocProvider.of<ShopBloc>(context).add(RegisterUserEvent(Utils.userImageUrl,name,email,password,phone));
+                    context.read<ShopBloc>().add(RegisterUserEvent(Utils.userImageUrl,name,email,password,phone));
 
                   }, color: Colors.deepOrange, isLoading: isVisible,),
                   Padding(
