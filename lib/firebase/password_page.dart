@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import '../auth_bloc/shop_bloc.dart';
 import '../auth_bloc/shop_bloc_event.dart';
 import '../auth_bloc/shop_bloc_state.dart';
@@ -17,17 +20,30 @@ class PasswordPage extends StatefulWidget {
 
 class _PasswordPageState extends State<PasswordPage> {
   final TextEditingController _emailController = TextEditingController();
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ShopBloc,ShopBlocState>(
       listener: (context,state){
         if(state is RecoverPassState){
+
+          setState(() {
+            isLoading = false;
+          });
+
           if(state.isSuccess){
              _emailController.clear();
-             Fluttertoast.showToast(msg: "Reset email has been sent to you");
+             _showSnackBar("Reset email has been sent to you");
           } else {
             _emailController.clear();
-             Fluttertoast.showToast(msg: "Failed to send reset email , Try again later");
+             _showSnackBar("Failed to send reset email , Try again later");
           }
         }
       },
@@ -65,11 +81,16 @@ class _PasswordPageState extends State<PasswordPage> {
                 CustomContainer(text: "Reset", onClick: (){
                   String email = _emailController.text.toString();
                   if(email.isEmpty){
-                    Fluttertoast.showToast(msg: "Email should not be empty");
+                    _showSnackBar("Email should not be empty");
                     return;
                   }
+
+                  setState(() {
+                    isLoading = true;
+                  });
+
                   BlocProvider.of<ShopBloc>(context).add(RecoverPassEvent(email));
-                }, color: Colors.deepOrange),
+                }, color: Colors.deepOrange, isLoading: isLoading,),
               ],
             ),
           ),
@@ -77,4 +98,12 @@ class _PasswordPageState extends State<PasswordPage> {
       ),
     );
   }
+
+  _showSnackBar(String errorMsg){
+    Get.showSnackbar(GetSnackBar(
+      message: errorMsg,
+      duration: const Duration(seconds: 2),
+    ));
+  }
+
 }

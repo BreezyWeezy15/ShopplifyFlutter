@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   BlocProvider.of<ShopBloc>(context).add(UploadDataEvent(oldImageUrl,name,email,phone));
                                 }
                               }
-                            }, color: Colors.deepOrange,marginTop: 30,),
+                            }, color: Colors.deepOrange,marginTop: 30, isLoading: false,),
                             CustomButtonContainer(text: "Logout", onTap: (){
 
                               showDialog(
@@ -186,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                      );
                                   });
 
-                            }, color: Colors.deepOrange,marginTop: 30,)
+                            }, color: Colors.deepOrange,marginTop: 30, isLoading: false,)
                           ],
                         );
                       } else {

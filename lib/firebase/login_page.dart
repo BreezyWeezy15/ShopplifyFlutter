@@ -21,6 +21,16 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   bool isVisible = false;
+
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ShopBloc,ShopBlocState>(
@@ -101,33 +111,35 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Center(child: Visibility(
-                    visible: isVisible,
-                    child: CircularProgressIndicator(),
-                  ),),
-                ),
                 CustomContainer(text: "Login", onClick: (){
                   String email = _emailController.text.toString();
                   String password = _passController.text.toString();
 
                   if(email.isEmpty){
-                    Fluttertoast.showToast(msg: "Email should not be empty");
+                    Get.showSnackbar(const GetSnackBar(
+                      message: "Email should not be empty",
+                      duration: Duration(seconds: 2),
+                    ));
                     return;
                   }
                   if(password.isEmpty){
-                    Fluttertoast.showToast(msg: "Password should not empty");
+                    Get.showSnackbar(const GetSnackBar(
+                      message: "Password should not empty",
+                      duration: Duration(seconds: 2),
+                    ));
                     return;
                   }
                   if(password.length < 6){
-                    Fluttertoast.showToast(msg: "Password Length cannot be less than 6");
+                    Get.showSnackbar(const GetSnackBar(
+                      message: "Password Length cannot be less than 6",
+                      duration: Duration(seconds: 2),
+                    ));
                     return;
                   }
 
                   BlocProvider.of<ShopBloc>(context).add(LoginUserEvent(email, password));
 
-                }, color: Colors.deepOrange),
+                }, color: Colors.deepOrange, isLoading: isVisible,),
                 Padding(
                   padding: const EdgeInsets.only(left: 20,right: 20,top: 30,),
                   child: Row(

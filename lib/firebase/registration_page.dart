@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,6 +24,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   bool isVisible = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ShopBloc,ShopBlocState>(
@@ -39,25 +51,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
            }
            if(state is RegisterState){
              if(state.userCredential != null){
-               Fluttertoast.showToast(msg: "Success");
+               _showSnackBar("Success");
                BlocProvider.of<ShopBloc>(context).add(UploadDataEvent(state.userImage,state.name,state.email,state.phone));
              }
              else {
-               Fluttertoast.showToast(msg: "Failed to create an account");
+               _showSnackBar("Failed to create an account");
                setState(() {
                  isVisible = false;
                });
              }
            }
            if(state is UploadDataState){
-             Fluttertoast.showToast(msg: "Account successfully created");
+              _showSnackBar("Account successfully created");
               if(state.isSuccess){
                 setState(() {
                   isVisible = false;
                 });
                 Get.offNamed(Utils.homeRoute);
               } else {
-                Fluttertoast.showToast(msg: "Failed to create an account");
+                _showSnackBar("Failed to create an account");
                 setState(() {
                   isVisible = false;
                 });
@@ -102,13 +114,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   CustomEdit(hint: "JohnDoe@gmail.com",iconData: Icons.email_outlined, textEditingController: _emailController,),
                   CustomEdit(hint: "+1 800-578-574",iconData: Icons.phone, textEditingController: _phoneController,),
                   CustomEdit(hint: "******",iconData: Icons.password, textEditingController: _passController,),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Center(child: Visibility(
-                      visible: isVisible,
-                      child: const CircularProgressIndicator(),
-                    ),),
-                  ),
                   CustomContainer(text: "Register", onClick: (){
                     String name = _nameController.text.toString();
                     String email = _emailController.text.toString();
@@ -116,29 +121,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     String password = _phoneController.text.toString();
 
                     if(name.isEmpty){
-                      Fluttertoast.showToast(msg: "Name should not be empty");
+                      _showSnackBar("Name should not be empty");
                       return;
                     }
                     if(email.isEmpty){
-                      Fluttertoast.showToast(msg: "Email should not be empty");
+                      _showSnackBar("Email should not be empty");
                       return;
                     }
                     if(phone.isEmpty){
-                      Fluttertoast.showToast(msg: "Phone should not be empty");
+                      _showSnackBar("Phone should not be empty");
                       return;
                     }
                     if(password.isEmpty){
-                      Fluttertoast.showToast(msg: "Password should not be empty");
+                      _showSnackBar("Password should not be empty");
                       return;
                     }
                     if(password.length < 6){
-                      Fluttertoast.showToast(msg: "Password cannot be less than 6");
+                      _showSnackBar("Password cannot be less than 6");
                       return;
                     }
 
                     BlocProvider.of<ShopBloc>(context).add(RegisterUserEvent(Utils.userImageUrl,name,email,password,phone));
 
-                  }, color: Colors.deepOrange),
+                  }, color: Colors.deepOrange, isLoading: isVisible,),
                   Padding(
                     padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
                     child: Row(
@@ -159,5 +164,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
           ),
         ),);
+  }
+
+  _showSnackBar(String errorMsg){
+    Get.showSnackbar(GetSnackBar(
+      message: errorMsg,
+      duration: const Duration(seconds: 2),
+    ));
   }
 }

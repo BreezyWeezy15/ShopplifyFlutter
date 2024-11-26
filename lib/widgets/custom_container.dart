@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:furniture_flutter_app/utils.dart';
 
 class CustomContainer extends StatelessWidget {
   final String? text;
   final Function()? onClick;
   final Color? color;
-  const CustomContainer({super.key,required this.text,required this.onClick,required this.color});
+  final bool isLoading;
+  const CustomContainer({super.key,required this.text,required this.onClick,required this.color ,
+   required this.isLoading });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,10 @@ class CustomContainer extends StatelessWidget {
               borderRadius: BorderRadius.circular(36),
               color: color
           ),
-          child: Center(child: Text(text!,style: getArimoBold().copyWith(fontSize: 18,color: Colors.white),),),
+          child: Center(
+            child: isLoading ?
+            const SpinKitCubeGrid(size: 25,color: Colors.white) :
+            Text(text!,style: getArimoBold().copyWith(fontSize: 18,color: Colors.white),)),
         ),
       ),
     );

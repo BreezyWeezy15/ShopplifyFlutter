@@ -16,7 +16,7 @@ class CustomEdit extends StatelessWidget {
         decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             hintText: hint,
-            suffixIcon: Icon(iconData)
+            prefix: Icon(iconData,size: 25,)
         ),
       ),
     );

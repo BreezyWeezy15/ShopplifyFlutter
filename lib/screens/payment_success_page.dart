@@ -36,7 +36,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                 Text("Item Bought Successfully",style: getArimoBold().copyWith(fontSize: 20)),
                 const Gap(30),
                 CustomButtonContainer(text: "Finish", onTap: (){Get.offNamed(Utils.homeRoute);},
-                    color: Colors.deepOrange,marginTop: 30,)
+                    color: Colors.deepOrange,marginTop: 30, isLoading: false,)
               ],
             ),
           ),

@@ -27,6 +27,7 @@ class _DetailsPageState extends State<DetailsPage> {
   late String itemID;
   late String route = "";
   bool isAdded = false;
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -177,7 +178,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                 quantity: 0,
                                 category: data.category!);
                             BlocProvider.of<PaymentBloc>(context).add(GetCreateItemEvent(cartModel));
-                          }, color: Colors.blueGrey),
+                          }, color: Colors.blueGrey, isLoading: isLoading,),
                         )
                       ],
                     );
